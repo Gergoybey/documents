@@ -1,21 +1,39 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pl.adrian.pieper.gui;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.DefaultComboBoxModel;
+import pl.adrian.pieper.rtf.sample.PlaceHolderProcessor;
+import pl.adrian.pieper.rtf.sample.ProcessorModule;
+import pl.adrian.pieper.rtf.sample.TemplatesManager;
+import pl.adrian.pieper.rtf.sample.TempleteModel;
 
 /**
  *
  * @author Adi
  */
-public class MainPanel extends javax.swing.JPanel {
-
+public class MainPanel extends javax.swing.JPanel implements ProcessorModule.Gui{
+    private TempleteModel template;
+    private TemplatesManager templatesManager = new TemplatesManager();
     /**
      * Creates new form MainPanel
      */
     public MainPanel() {
         initComponents();
+        try{
+            templatesManager.load("templates");
+            setTemplate(templatesManager.getTemplates().get(0));
+            templatesComboBox.setModel(new DefaultComboBoxModel(templatesManager.getTemplates().toArray()));
+            templatesComboBox.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    setTemplate((TempleteModel) templatesComboBox.getSelectedItem());
+                }
+            });
+        }catch(Exception e){
+            
+        }
     }
 
     /**
@@ -28,11 +46,11 @@ public class MainPanel extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        documentModel = new pl.adrian.pieper.rtf.sample.DocumentModel();
         jLabel1 = new javax.swing.JLabel();
+        templatesComboBox = new javax.swing.JComboBox();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        otherDatePanel1 = new pl.adrian.pieper.gui.OtherDatePanel();
+        placeHoldersPanel = new pl.adrian.pieper.gui.OtherDatePanel();
         tablePanel1 = new pl.adrian.pieper.gui.TablePanel();
         processButton = new javax.swing.JButton();
 
@@ -46,8 +64,13 @@ public class MainPanel extends javax.swing.JPanel {
         jLabel1.setPreferredSize(new java.awt.Dimension(320, 96));
         add(jLabel1, new java.awt.GridBagConstraints());
 
-        otherDatePanel1.setData(documentModel);
-        jScrollPane1.setViewportView(otherDatePanel1);
+        templatesComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        add(templatesComboBox, gridBagConstraints);
+
+        jScrollPane1.setViewportView(placeHoldersPanel);
 
         jTabbedPane1.addTab("Inne dane", jScrollPane1);
 
@@ -56,6 +79,7 @@ public class MainPanel extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -73,18 +97,29 @@ public class MainPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void processButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processButtonActionPerformed
-        
-        documentModel.process();
+        template.process();
     }//GEN-LAST:event_processButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private pl.adrian.pieper.rtf.sample.DocumentModel documentModel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private pl.adrian.pieper.gui.OtherDatePanel otherDatePanel1;
+    private pl.adrian.pieper.gui.OtherDatePanel placeHoldersPanel;
     private javax.swing.JButton processButton;
     private pl.adrian.pieper.gui.TablePanel tablePanel1;
+    private javax.swing.JComboBox templatesComboBox;
     // End of variables declaration//GEN-END:variables
+
+    private void setTemplate(TempleteModel templeteModel) {
+        this.template = templeteModel;
+        for (ProcessorModule module : templeteModel.getModules()) {
+            module.attach(this);
+        }
+    }
+
+    @Override
+    public void attach(PlaceHolderProcessor holderProcessor) {
+        placeHoldersPanel.setData(holderProcessor);
+    }
 }

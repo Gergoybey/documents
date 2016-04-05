@@ -8,7 +8,8 @@ package pl.adrian.pieper.gui;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import org.apache.batik.ext.swing.GridBagConstants;
-import pl.adrian.pieper.rtf.sample.DocumentModel;
+import pl.adrian.pieper.rtf.sample.PlaceHolderProcessor;
+import pl.adrian.pieper.rtf.sample.TempleteModel;
 import pl.adrian.pieper.rtf.sample.SimpleData;
 
 /**
@@ -24,8 +25,8 @@ public class OtherDatePanel extends javax.swing.JPanel {
         initComponents();
     }
     
-    public void setData(DocumentModel documentModel){
-        for (SimpleData placeHolder : documentModel.getPlaceHolders().values()) {
+    public void setData(PlaceHolderProcessor placeHolderProcessor){
+        for (SimpleData placeHolder : placeHolderProcessor.getPlaceHolders().values()) {
             System.out.println(placeHolder.getPlaceholder());
             SingleDataView singleDataView = new SingleDataView();
             singleDataView.setData(placeHolder);

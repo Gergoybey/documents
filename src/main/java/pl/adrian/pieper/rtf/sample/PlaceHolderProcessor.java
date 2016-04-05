@@ -5,7 +5,6 @@
  */
 package pl.adrian.pieper.rtf.sample;
 
-import com.google.common.collect.HashBiMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,20 +13,17 @@ import java.util.Map;
  *
  * @author Adi
  */
-public class DocumentModel {
-    
-    private Map<String,SimpleData> placeHolders = new HashMap<>();
+public class PlaceHolderProcessor extends ProcessorModule{
+    private final Map<String,SimpleData> placeHolders = new HashMap<>();
 
-    public DocumentModel() {
+    public PlaceHolderProcessor(String fileName) {
         
-        List<SimpleData> data = SimpleData.parseFile("szablony/dane.csv");
+        List<SimpleData> data = SimpleData.parseFile(fileName);
         for (SimpleData simpleData : data) {
             placeHolders.put(simpleData.getPlaceholder(), simpleData);
         }
     }
-    
-    
-    
+
     private void addData(String name,String placeholder){
         
         placeHolders.put(placeholder, new SimpleData(name,placeholder));
@@ -36,8 +32,8 @@ public class DocumentModel {
     public Map<String, SimpleData> getPlaceHolders() {
         return placeHolders;
     }
-
     
+    @Override
     public void process(){
         Processor processor = new Processor();
         
@@ -48,5 +44,10 @@ public class DocumentModel {
         }
         
         processor.replace("szablony/1.Pomiary-temp.docx","out.docx",values);
+    }
+
+    @Override
+    public void attach(Gui gui) {
+        gui.attach(this);
     }
 }
