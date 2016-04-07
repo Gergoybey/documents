@@ -3,23 +3,28 @@ package pl.adrian.pieper.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.DefaultComboBoxModel;
-import pl.adrian.pieper.rtf.sample.PlaceHolderProcessor;
-import pl.adrian.pieper.rtf.sample.ProcessorModule;
-import pl.adrian.pieper.rtf.sample.TemplatesManager;
-import pl.adrian.pieper.rtf.sample.TempleteModel;
+import javax.swing.JScrollPane;
+import pl.adrian.pieper.domain.PlaceHolderModule;
+import pl.adrian.pieper.domain.ProcessorModule;
+import pl.adrian.pieper.domain.TemplatesManager;
+import pl.adrian.pieper.domain.TempleteModel;
 
 /**
  *
  * @author Adi
  */
-public class MainPanel extends javax.swing.JPanel implements ProcessorModule.Gui{
+public class MainPanel extends javax.swing.JPanel implements ProcessorModule.Gui, TempleteModel.ProgressGUI{
     private TempleteModel template;
-    private TemplatesManager templatesManager = new TemplatesManager();
+    private TemplatesManager templatesManager;
     /**
      * Creates new form MainPanel
      */
     public MainPanel() {
         initComponents();
+    }
+
+    public void setTemplatesManager(TemplatesManager templatesManager) {
+        this.templatesManager = templatesManager;
         try{
             templatesManager.load("templates");
             setTemplate(templatesManager.getTemplates().get(0));
@@ -28,14 +33,16 @@ public class MainPanel extends javax.swing.JPanel implements ProcessorModule.Gui
 
                 @Override
                 public void actionPerformed(ActionEvent ae) {
-                    setTemplate((TempleteModel) templatesComboBox.getSelectedItem());
+                    setTemplate((TempleteModel.Info) templatesComboBox.getSelectedItem());
                 }
             });
         }catch(Exception e){
-            
+            e.printStackTrace();
         }
     }
 
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -46,44 +53,38 @@ public class MainPanel extends javax.swing.JPanel implements ProcessorModule.Gui
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jLabel1 = new javax.swing.JLabel();
         templatesComboBox = new javax.swing.JComboBox();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        placeHoldersPanel = new pl.adrian.pieper.gui.OtherDatePanel();
-        tablePanel1 = new pl.adrian.pieper.gui.TablePanel();
+        jPanel1 = new javax.swing.JPanel();
+        outName = new javax.swing.JTextField();
         processButton = new javax.swing.JButton();
+        processFileLabel = new javax.swing.JLabel();
+        progressBar = new javax.swing.JProgressBar();
 
         setMaximumSize(new java.awt.Dimension(400, 300));
         setMinimumSize(new java.awt.Dimension(400, 300));
         setLayout(new java.awt.GridBagLayout());
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel1.setText("<html>POMIARY OKRESOWE INSTALACJI ELEKTRYCZNEJ </html>");
-        jLabel1.setMinimumSize(new java.awt.Dimension(320, 96));
-        jLabel1.setPreferredSize(new java.awt.Dimension(320, 96));
-        add(jLabel1, new java.awt.GridBagConstraints());
-
         templatesComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(templatesComboBox, gridBagConstraints);
-
-        jScrollPane1.setViewportView(placeHoldersPanel);
-
-        jTabbedPane1.addTab("Inne dane", jScrollPane1);
-
-        tablePanel1.setPreferredSize(null);
-        jTabbedPane1.addTab("Wyniki", tablePanel1);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(jTabbedPane1, gridBagConstraints);
+
+        jPanel1.setLayout(new java.awt.GridLayout(4, 0, 0, 2));
+
+        outName.setText("-");
+        jPanel1.add(outName);
 
         processButton.setText("OK");
         processButton.addActionListener(new java.awt.event.ActionListener() {
@@ -91,35 +92,66 @@ public class MainPanel extends javax.swing.JPanel implements ProcessorModule.Gui
                 processButtonActionPerformed(evt);
             }
         });
+        jPanel1.add(processButton);
+
+        processFileLabel.setText("-");
+        processFileLabel.setMinimumSize(new java.awt.Dimension(0, 0));
+        processFileLabel.setPreferredSize(new java.awt.Dimension(0, 0));
+        jPanel1.add(processFileLabel);
+
+        progressBar.setMinimumSize(new java.awt.Dimension(0, 0));
+        progressBar.setPreferredSize(new java.awt.Dimension(0, 0));
+        jPanel1.add(progressBar);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        add(processButton, gridBagConstraints);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        add(jPanel1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void processButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processButtonActionPerformed
-        template.process();
+        template.process(outName.getText(),this);
     }//GEN-LAST:event_processButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private pl.adrian.pieper.gui.OtherDatePanel placeHoldersPanel;
+    private javax.swing.JTextField outName;
     private javax.swing.JButton processButton;
-    private pl.adrian.pieper.gui.TablePanel tablePanel1;
+    private javax.swing.JLabel processFileLabel;
+    private javax.swing.JProgressBar progressBar;
     private javax.swing.JComboBox templatesComboBox;
     // End of variables declaration//GEN-END:variables
 
-    private void setTemplate(TempleteModel templeteModel) {
-        this.template = templeteModel;
-        for (ProcessorModule module : templeteModel.getModules()) {
+    private void setTemplate(TempleteModel.Info tempInfo) {
+        this.template = tempInfo.create();
+        jTabbedPane1.removeAll();
+        outName.setText(tempInfo.toString());
+        for (ProcessorModule module : template.getModules()) {
             module.attach(this);
         }
     }
 
     @Override
-    public void attach(PlaceHolderProcessor holderProcessor) {
+    public void attach(PlaceHolderModule holderProcessor) {
+        OtherDatePanel placeHoldersPanel = new OtherDatePanel();
+        jTabbedPane1.addTab("Dane", new JScrollPane(placeHoldersPanel));
         placeHoldersPanel.setData(holderProcessor);
+    }
+
+    @Override
+    public void showProgress(int i, int N, String processingFile) {
+        processFileLabel.setText(i + "/" + N + " - " + processingFile);
+        progressBar.setMaximum(N);
+        progressBar.setValue(i);
+    }
+
+    @Override
+    public void done() {
+        processFileLabel.setText("Gotowe");
+        progressBar.setValue(0);
     }
 }

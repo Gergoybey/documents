@@ -7,7 +7,7 @@ package pl.adrian.pieper.gui;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import pl.adrian.pieper.rtf.sample.SimpleData;
+import pl.adrian.pieper.domain.PlaceHolder;
 
 /**
  *
@@ -34,14 +34,13 @@ public class SingleDataView extends javax.swing.JPanel {
         return field.getText();
     }
     
-    public void setData(final SimpleData data){
+    public void setData(final PlaceHolder data){
         label.setText(data.getName());
         field.setText(data.getValue());
         field.addFocusListener(new FocusListener() {
 
             @Override
             public void focusGained(FocusEvent e) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override

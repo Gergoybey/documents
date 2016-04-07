@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.adrian.pieper.rtf.sample;
+package pl.adrian.pieper.domain;
+
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 
 /**
  *
@@ -11,11 +13,11 @@ package pl.adrian.pieper.rtf.sample;
  */
 public abstract class ProcessorModule {
 
-    public abstract void process();
+    public abstract void process(ProcessFile processFile);
     
     public abstract void attach(Gui gui);
     
     public interface Gui{
-        void attach(PlaceHolderProcessor holderProcessor);
+        void attach(PlaceHolderModule holderProcessor);
     }
 }
