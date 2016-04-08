@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import org.apache.commons.lang.StringUtils;
@@ -44,7 +46,23 @@ public class MainClass {
     private static ObjectFactory factory;
  
     public static void main (String[] args) throws Docx4JException {
-       
+       try {
+                // Set cross-platform Java L&F (also called "Metal")
+            UIManager.setLookAndFeel(
+                UIManager.getSystemLookAndFeelClassName());
+        } 
+        catch (UnsupportedLookAndFeelException e) {
+           // handle exception
+        }
+        catch (ClassNotFoundException e) {
+           // handle exception
+        }
+        catch (InstantiationException e) {
+           // handle exception
+        }
+        catch (IllegalAccessException e) {
+           // handle exception
+        }
         ApplicationContext context = new ClassPathXmlApplicationContext("context.xml");
         
     }

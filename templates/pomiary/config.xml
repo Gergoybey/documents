@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" ?>
+<!DOCTYPE pola SYSTEM "../../modules/holders.dtd">
+
+<config>
+<tablica>true</tablica>
+    <pole etykieta="_DATE_">
+        <wartosc>.2016r.</wartosc>
+        <nazwa>Data</nazwa>
+    </pole>
+    <pole etykieta="_OBJECT_">
+        <wartosc>Budynek Administracyjno-Apteczny</wartosc>
+        <nazwa>Obiekt</nazwa>
+    </pole>
+    <pole etykieta="_ADDRESS_">
+        <wartosc>ul. Wójta Radtkego 1, Gdynia</wartosc>
+        <nazwa>Adres</nazwa>
+    </pole>
+    <pole etykieta="_INWESTOR_">
+        <wartosc>Św. Wincentego Gdynia, Szpital</wartosc>
+        <nazwa>INWESTOR</nazwa>
+    </pole>
+    <pole etykieta="_PERIOT_"> 
+        <wartosc>.2016r. - .2016r</wartosc>
+        <nazwa>OKRES PRZEPROWADZENIA BADAŃ</nazwa>
+    </pole>
+    <pole etykieta="_NEXT_DATE_">
+        <wartosc>.2018r.</wartosc>
+        <nazwa>TERMIN NASTĘPNYCH BADAŃ</nazwa>
+    </pole>
+</config>

@@ -6,23 +6,24 @@
 package pl.adrian.pieper.domain;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
-import pl.adrian.pieper.data.PlaceHoldersXML;
+import java.util.Collection;
+import pl.adrian.pieper.data.ConfigXML;
 
 /**
  *
  * @author Adi
  */
 public class Processors {
-    public static final String HOLDERS = "holders.xml";
 
-    public static ProcessorModule createfor(File file) {
-        if (file.getName().equals(HOLDERS)){
-            PlaceHoldersXML placeHoldersXML = PlaceHoldersXML.load(file);
-            
-            return new PlaceHolderModule(Arrays.asList(placeHoldersXML.placeHolders));
-        }
-        throw new RuntimeException();
+    public static Collection<ProcessorModule> readConfig(File file) {
+        ConfigXML configXML = ConfigXML.load(file);
+        ArrayList<ProcessorModule> modules = new ArrayList<>();
+        modules.add(new PlaceHolderModule(Arrays.asList(configXML.placeHolders)));
+        if (configXML.hasTable)
+            modules.add(new TableModule());
+        return modules;
     }
     
 }

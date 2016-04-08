@@ -13,11 +13,16 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
  */
 public abstract class ProcessorModule {
 
-    public abstract void process(ProcessFile processFile);
+    public abstract Processor getProcessor();
     
     public abstract void attach(Gui gui);
     
     public interface Gui{
         void attach(PlaceHolderModule holderProcessor);
+        void attach(TableModule tableModule);
+    }
+    
+    public interface Processor{
+        void process(ProcessFile processFile);
     }
 }

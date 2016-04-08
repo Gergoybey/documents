@@ -12,7 +12,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import javax.swing.SwingUtilities;
+import pl.adrian.pieper.domain.ProcessorModule.Processor;
 
 /**
  *
@@ -26,24 +29,14 @@ public class TempleteModel {
     private TempleteModel(File dir) {
         this.tempDir = dir;
         System.out.println("is dir");
-        for (File file : dir.listFiles()) {
-            analize(file);
-        }
+        analize(new File(dir,"config.xml"));
     }
 
     private void analize(File file) {
         System.out.println(file.getName());
-        if (file.getName().endsWith(".xml")){
-            System.out.println(file.getName());
-            ProcessorModule module = Processors.createfor(file);
-            addModule(module);
-        }
+        this.modules.addAll(Processors.readConfig(file));
     }
     
-    private void addModule(ProcessorModule module) {
-        modules.add(module);
-    }
-
     public List<ProcessorModule> getModules() {
         return modules;
     }
@@ -54,38 +47,7 @@ public class TempleteModel {
     }
     
     public void process(String outDirName,final ProgressGUI gui) {
-        new Thread(){
-
-                @Override
-                public void run() {
-                    final File outdir = new File("out/" + outDirName + "/");
-                    
-                    
-                    outdir.mkdirs();
-                    List<File> files = new ArrayList<>(Arrays.asList(tempDir.listFiles()));
-                    files.removeIf(file -> !file.getName().endsWith(".docx"));
-                    int N = files.size();
-                    int i = 0;
-                    for (final File file : files) {
-                        final int fileId = i;
-                        SwingUtilities.invokeLater(() -> gui.showProgress(fileId, N, file.getName())                       );
-                        i++;
-                        if (file.getName().contains(".docx")) {
-                            ProcessFile processFile = new ProcessFile(file);
-
-                            for (ProcessorModule module : modules) {
-                                module.process(processFile);
-                            }
-
-                            processFile.save(outdir.getPath() + "/" + file.getName());
-                        }
-                    } 
-                    
-                    SwingUtilities.invokeLater(()->gui.done());
-                    
-                }
-                
-            }.start();
+        new ThreadImpl(outDirName, gui).start();
         
     }
 
@@ -109,6 +71,51 @@ public class TempleteModel {
         
         public TempleteModel create(){
             return new TempleteModel(dir);
+        }
+    }
+
+    private class ThreadImpl extends Thread {
+
+        private final String outDirName;
+        private final ProgressGUI gui;
+
+        public ThreadImpl(String outDirName, ProgressGUI gui) {
+            this.outDirName = outDirName;
+            this.gui = gui;
+        }
+
+        @Override
+        public void run() {
+            final File outdir = new File("out/" + outDirName + "/");
+            
+            
+            outdir.mkdirs();
+            List<File> files = new ArrayList<>(Arrays.asList(tempDir.listFiles()));
+            files.removeIf(file -> !file.getName().endsWith(".docx") || file.getName().startsWith("~"));
+            int N = files.size();
+            int i = 0;
+            
+            List<Processor> processors = new ArrayList<>(modules.size());
+            modules.forEach((ProcessorModule t) -> {
+                processors.add(t.getProcessor());
+            });
+            
+            for (final File file : files) {
+                final int fileId = i;
+                SwingUtilities.invokeLater(() -> gui.showProgress(fileId, N, file.getName())                       );
+                i++;
+                ProcessFile processFile = new ProcessFile(file);
+                
+                for (Processor processor : processors) {
+                    processor.process(processFile);
+                }
+                
+                processFile.save(outdir.getPath() + "/" + file.getName());
+                
+            }
+            
+            SwingUtilities.invokeLater(()->gui.done());
+            
         }
     }
 }

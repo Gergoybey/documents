@@ -37,13 +37,13 @@ import org.docx4j.wml.Tr;
  */
 
 
-public class Processor {
+public class OldProcessor {
     private static WordprocessingMLPackage  wordMLPackage;
     private static ObjectFactory factory;
  
     public static void main (String[] args) throws Docx4JException {
        
-        new Processor().replaceDate();
+        new OldProcessor().replaceDate();
     }
  
     private WordprocessingMLPackage getTemplate(String name) throws Docx4JException, FileNotFoundException {
@@ -95,13 +95,13 @@ public class Processor {
             replateTable(template);
             writeDocxToStream(template, "out.docx");
         } catch (Docx4JException ex) {
-            Logger.getLogger(Processor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OldProcessor.class.getName()).log(Level.SEVERE, null, ex);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Processor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OldProcessor.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(Processor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OldProcessor.class.getName()).log(Level.SEVERE, null, ex);
         } catch (JAXBException ex) {
-            Logger.getLogger(Processor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OldProcessor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -196,7 +196,7 @@ public class Processor {
             for (Text textElement : textElements) {
                 
                 if (textElement.getValue() != null && textElement.getValue().equals(templateKey)) {
-                    return (Tbl) tbl;
+                    return tbl;
                 }
             }
         }
@@ -225,11 +225,11 @@ public class Processor {
             replacePlaceholder(template, "Fajne funkcje", "{DATE}");
             writeDocxToStream(template, "out.docx");
         } catch (Docx4JException ex) {
-            Logger.getLogger(Processor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OldProcessor.class.getName()).log(Level.SEVERE, null, ex);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Processor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OldProcessor.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(Processor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OldProcessor.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         
@@ -244,11 +244,11 @@ public class Processor {
             }
             writeDocxToStream(template, outdocx);
         } catch (Docx4JException ex) {
-            Logger.getLogger(Processor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OldProcessor.class.getName()).log(Level.SEVERE, null, ex);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Processor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OldProcessor.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(Processor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OldProcessor.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
 

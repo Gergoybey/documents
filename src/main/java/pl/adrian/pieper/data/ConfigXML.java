@@ -18,27 +18,28 @@ import pl.adrian.pieper.domain.PlaceHolder;
  *
  * @author Adi
  */
-@XStreamAlias("pola")
-public class PlaceHoldersXML {
+@XStreamAlias("config")
+public class ConfigXML {
     @XStreamImplicit
     public PlaceHolder[] placeHolders;
-    
+    @XStreamAlias("tablica")
+    public boolean hasTable;
     
     public static XStream getXSteam(){
         XStream xstream = new XStream(new StaxDriver());
-        xstream.processAnnotations(PlaceHoldersXML.class);
+        xstream.processAnnotations(ConfigXML.class);
         xstream.processAnnotations(PlaceHolder.class);
         return xstream;
     }
     
     public static void main(String[] args) throws FileNotFoundException {
-        PlaceHoldersXML holdersXML = new PlaceHoldersXML();
+        ConfigXML holdersXML = new ConfigXML();
         holdersXML.placeHolders = new PlaceHolder[]{new PlaceHolder("Ulica", "{STREET}", "DEF VALUE"),new PlaceHolder("Ulica", "{STREET}", "DEF VALUE")};
         getXSteam().toXML(holdersXML, new FileOutputStream("out.xml"));
     }
     
-    public static PlaceHoldersXML load(File file){
-        final PlaceHoldersXML xml = (PlaceHoldersXML) getXSteam().fromXML(file);
+    public static ConfigXML load(File file){
+        final ConfigXML xml = (ConfigXML) getXSteam().fromXML(file);
         for (PlaceHolder placeHolder : xml.placeHolders) {
             placeHolder.setDefault();
         }

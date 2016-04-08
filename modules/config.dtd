@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+    TODO define vocabulary identification
+    PUBLIC ID: -//vendor//vocabulary//EN
+    SYSTEM ID: http://server/path/holders.dtd
+
+-->
+
+<!--
+    An example how to use this DTD from your XML document:
+
+    <?xml version="1.0"?>
+
+    <!DOCTYPE config SYSTEM "config.dtd">
+
+    <pola>
+    ...
+    </pola>
+-->
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT config (pole)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT pole (nazwa?,wartosc?)>
+<!ATTLIST pole
+    etykieta CDATA #REQUIRED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT wartosc (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT nazwa (#PCDATA)>

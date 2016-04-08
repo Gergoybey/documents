@@ -26,7 +26,7 @@ public class OtherDatePanel extends javax.swing.JPanel {
     }
     
     public void setData(PlaceHolderModule placeHolderProcessor){
-        for (PlaceHolder placeHolder : placeHolderProcessor.getPlaceHolders().values()) {
+        for (PlaceHolder placeHolder : placeHolderProcessor.getPlaceHolders()) {
             System.out.println(placeHolder.getPlaceholder());
             SingleDataView singleDataView = new SingleDataView();
             singleDataView.setData(placeHolder);

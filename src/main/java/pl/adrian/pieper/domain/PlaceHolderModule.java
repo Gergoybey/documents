@@ -5,30 +5,25 @@
  */
 package pl.adrian.pieper.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  *
  * @author Adi
  */
 public class PlaceHolderModule extends ProcessorModule{
-    private final Map<String,PlaceHolder> placeHolders = new HashMap<>();
+    private final List<PlaceHolder> placeHolders = new ArrayList<>();
 
     public PlaceHolderModule(Collection<PlaceHolder> data) {
-        for (PlaceHolder simpleData : data) {
-            placeHolders.put(simpleData.getPlaceholder(), simpleData);
-        }
-    }
-    
-    private void addData(String name,String placeholder){
-        
-        placeHolders.put(placeholder, new PlaceHolder(name,placeholder));
+        placeHolders.addAll(data);
     }
 
-    public Map<String, PlaceHolder> getPlaceHolders() {
+    public List<PlaceHolder> getPlaceHolders() {
         return placeHolders;
     }
     
@@ -38,14 +33,23 @@ public class PlaceHolderModule extends ProcessorModule{
     }
 
     @Override
-    public void process(ProcessFile processFile) {
-        Map<String,String> values = new HashMap<>();
+    public Processor getProcessor() {
+        return new HoldersProc();
+    }
+    
+    class HoldersProc implements Processor{
+        Map<Pattern,String> values = new HashMap<>();
+
+        public HoldersProc() {
         
-        for (PlaceHolder value : placeHolders.values()) {
-            values.put(value.getPlaceholder(), value.getValue());
+            for (PlaceHolder value : placeHolders) {
+                values.put(Pattern.compile(value.getPlaceholder()), value.getValue());
+            }
         }
         
-        
-        processFile.replacePlaceholders(values);
+        @Override
+        public void process(ProcessFile processFile) {
+            processFile.replacePlaceholders(values);
+        }
     }
 }

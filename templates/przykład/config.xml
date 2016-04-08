@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" ?>
+<!DOCTYPE config SYSTEM "../../modules/config.dtd">
+
+<config>
+    <pole etykieta="_DATE_">
+        <nazwa>Data</nazwa>
+        <wartosc>.2016r.</wartosc>
+    </pole>
+    <pole etykieta="_WHERE_">
+        <nazwa>Adres</nazwa>
+        <wartosc>ul. - Rumia</wartosc>
+    </pole>
+    <pole etykieta="_ANAME_">
+        <nazwa>Autor</nazwa>
+        <wartosc>Adrian Pieper</wartosc>
+    </pole>
+    <pole etykieta="_NAME_"> 
+        <nazwa>Kto</nazwa>
+        <wartosc>?</wartosc>
+    </pole>
+    <pole etykieta="_EWHERE_">
+        <nazwa>Gdzie</nazwa>
+        <wartosc>?</wartosc>
+    </pole>
+    <pole etykieta="_EDATE_">
+        <nazwa>Kiedy</nazwa>
+        <wartosc>.2016r.</wartosc>
+    </pole>
+</config>

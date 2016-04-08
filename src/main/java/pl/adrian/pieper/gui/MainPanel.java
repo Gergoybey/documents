@@ -6,6 +6,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JScrollPane;
 import pl.adrian.pieper.domain.PlaceHolderModule;
 import pl.adrian.pieper.domain.ProcessorModule;
+import pl.adrian.pieper.domain.TableModule;
 import pl.adrian.pieper.domain.TemplatesManager;
 import pl.adrian.pieper.domain.TempleteModel;
 
@@ -142,6 +143,15 @@ public class MainPanel extends javax.swing.JPanel implements ProcessorModule.Gui
         placeHoldersPanel.setData(holderProcessor);
     }
 
+    @Override
+    public void attach(TableModule tableModule) {
+        TablePanel tablePanel = new TablePanel();
+        jTabbedPane1.addTab("Wyniki", tablePanel);
+        tablePanel.bind(tableModule);
+    }
+
+    
+    
     @Override
     public void showProgress(int i, int N, String processingFile) {
         processFileLabel.setText(i + "/" + N + " - " + processingFile);
